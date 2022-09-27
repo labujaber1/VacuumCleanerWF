@@ -1,10 +1,16 @@
-﻿using System;
+﻿//*****************************************************//
+//  Title: Vacuum Cleaner                              //
+//  Description: Simulate vacuum cleaning two rooms    //
+//  Author: SID 2018481                                //
+//  Date: 27/09/2022                                   //
+//                                                     //
+//*****************************************************//
+
+
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -21,16 +27,21 @@ namespace VacuumCleanerWF
         
         private string startRoom;
         private Dictionary<string, int> roomState = new Dictionary<string, int>(2);
-
+        /// <summary>
+        /// Adds rooms to dictionary
+        /// </summary>
         private void Setup()
         {
             //goalstate a=0,b=0
-            //Dictionary<string, int> roomState = new Dictionary<string, int>(2);
             // start clean status with value 0, add 1 for dirty status
             roomState.Add("a", 0);
             roomState.Add("b", 0);
         }
-
+        /// <summary>
+        /// Main method to  animate (replicate) vacuum and output action as text displayed in rich text box.
+        /// Includes task wait to sync 'animation' with text output. 
+        /// </summary>
+        /// <returns></returns>
         private async Task RunMain()
         {
             string actionRight = "\nMoving right.";
@@ -50,11 +61,9 @@ namespace VacuumCleanerWF
             {
                 foreach (KeyValuePair<string, int> rstate in roomState.ToList())
                 {
-                    //TextBox = "\nstartRoom is now "+ startRoom; //check print
                     //if foreach iteration is start room and is dirty
                     if (rstate.Key.Contains(startRoom.ToString()) && rstate.Value == 1)
                     {
-                        //TextBox = "\nEntering dirty loop";
                         if (startRoom.Equals("a"))
                         {
                             TextBox = roomA + actionSuck + clean + actionRight; //action
@@ -79,8 +88,7 @@ namespace VacuumCleanerWF
                     //if foreach iteration is start room and is clean
                     if (rstate.Key.Contains(startRoom.ToString()) && rstate.Value == 0)
                     {
-                        //TextBox = "\nEntering clean loop";
-                        if (startRoom.Equals("b"))
+                       if (startRoom.Equals("b"))
                         {
                             TextBox = roomB + clean + actionLeft; //action
                             startRoom = "a"; //moving to next room
@@ -98,18 +106,25 @@ namespace VacuumCleanerWF
                         }
                         countCleanRooms++;
                     }
-                    //wait
+                    //Winform does not do animation so this simulates it but is clunky.
                     await Task.Delay(1700);
                 }
             }
             TextBox = "\nRooms are now cleaned.";
        }
-
+        /// <summary>
+        /// Used to makes vacuum images invisible when new option selected from combobox (below)
+        /// </summary>
         private void ResetVacPosition()
         {
             Pbx_AVacuum.Visible = false;
             Pbx_BVacuum.Visible = false;
         }
+        /// <summary>
+        /// Makes vacuum image visible in picture view when selected from combobox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Cmbx_VacuumPosition_SelectedIndexChanged(object sender, EventArgs e)
         {
             ResetVacPosition();
@@ -120,13 +135,19 @@ namespace VacuumCleanerWF
             else
                 Pbx_BVacuum.Visible = true;
         }
-
+        /// <summary>
+        /// Used to makes dirty images invisible when new option selected from combobox (below)
+        /// </summary>
         private void ResetDirtyRoom()
         {
             Pbx_ADirty.Visible = false;
             Pbx_BDirty.Visible = false;
         }
-
+        /// <summary>
+        /// Makes dirty image visible in picture view when selected from combobox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Cmbx_DirtyRoom_SelectedIndexChanged(object sender, EventArgs e)
         {
             ResetDirtyRoom();
@@ -150,18 +171,32 @@ namespace VacuumCleanerWF
                 Pbx_BDirty.Visible = true;
             }
         }
-
+        /// <summary>
+        /// Call async main method to run simulation.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Btn_RunWF_Click(object sender, EventArgs e)
         {
-            RunMain();
+            _ = RunMain();
         }
-
+        /// <summary>
+        /// Cannot run console program directly in winform. Researching different approach.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Btn_RunConsole_Click(object sender, EventArgs e)
         {
             //VCConsole program = new VCConsole();
             //program.MainConsole(new string[] { "One", "Two" });
             MessageBox.Show("Nope, not happening yet :( ");
+            //Cannot run console in winform but can in WPF who knew!
         }
+        /// <summary>
+        /// Exit program
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Btn_Exit_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -182,27 +217,6 @@ namespace VacuumCleanerWF
             get { return Cmbx_DirtyRoom.SelectedItem.ToString(); }
             set { Cmbx_DirtyRoom.SelectedItem = value.ToString(); }        
         }
-        public Image AVacuum
-        {
-            get { return Pbx_AVacuum.Image; }
-            set { Pbx_AVacuum.Image = value; }
-        }
-        public Image BVacuum
-        {
-            get { return Pbx_BVacuum.Image; }
-            set { Pbx_BVacuum.Image = value; }
-        }
-        public Image ADirty
-        {
-            get { return Pbx_ADirty.Image; }
-            set { Pbx_ADirty.Image = value; }
-        }
-        public Image BDirty
-        {
-            get { return Pbx_BDirty.Image; }
-            set { Pbx_BDirty.Image = value; }
-        }
-
         
     }
 }

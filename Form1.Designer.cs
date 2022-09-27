@@ -114,6 +114,7 @@ namespace VacuumCleanerWF
             this.Btn_RunConsole.TabIndex = 5;
             this.Btn_RunConsole.Text = "Run console";
             this.Btn_RunConsole.UseVisualStyleBackColor = true;
+            this.Btn_RunConsole.Visible = false;
             this.Btn_RunConsole.Click += new System.EventHandler(this.Btn_RunConsole_Click);
             // 
             // Btn_Exit
